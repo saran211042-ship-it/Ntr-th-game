@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>นิยายภาพแนวดราม่า</title>
+  <style>
+    body{margin:0;font-family:'Prompt',sans-serif;background:#111;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}
+    #game-container{width:100%;max-width:480px;height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box;background:#222;border-radius:12px;position:relative;}
+    #scene{flex-grow:1;background-size:cover;background-position:center;border-radius:12px;margin-bottom:12px;display:flex;justify-content:center;align-items:flex-end;position:relative;}
+    #dialogue-box{background:rgba(0,0,0,0.7);padding:12px;border-radius:8px;width:100%;box-sizing:border-box;}
+    #dialogue{font-size:16px;margin-bottom:8px;line-height:1.5;}
+    .choice{background:#444;color:#fff;border:none;border-radius:8px;padding:10px;width:100%;margin-top:6px;font-size:15px;transition:0.3s;cursor:pointer;}
+    .choice:hover{background:#666;}
+    #sound-toggle{position:absolute;top:16px;right:16px;padding:8px 12px;border:none;border-radius:8px;background:#8b5cf6;color:#fff;cursor:pointer;z-index:10;}
+    @media(max-width:480px){#dialogue{font-size:14px;}.choice{font-size:14px;padding:8px;}}
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <button id="sound-toggle">ปิดเสียง</button>
+    <div id="scene"></div>
+    <div id="dialogue-box">
+      <div id="dialogue"></div>
+      <div id="choices"></div>
+    </div>
+  </div>
+
+  <audio id="bgm" loop></audio>
+  <audio id="rain" loop></audio>
+  <audio id="breath" loop></audio>
+
+  <script>
+    const soundToggle = document.getElementById('sound-toggle');
+    const bgm = document.getElementById('bgm');
+    const rain = document.getElementById('rain');
+    const breath = document.getElementById('breath');
+    let soundOn = true;
+
+    soundToggle.addEventListener('click', () => {
+      soundOn = !soundOn;
+      [bgm, rain, breath].forEach(a => a.muted = !soundOn);
+      soundToggle.textContent = soundOn ? 'ปิดเสียง' : 'เปิดเสียง';
+    });
+
+    const scenes = {
+      start:{
+        text:'ค่ำคืนนี้ฝนโปรย เธอกลับบ้านหลังจากทำงานเหมือนทุกวัน...',
+        img:'assets/scene_1018.jpg',
+        bgm:'assets/bgm_start.mp3',
+        rain:'',
+        breath:'',
+        choices:[
+          {text:'ไปห้องนั่งเล่น',next:'livingRoom'},
+          {text:'โทรหาเพื่อนสนิท',next:'callFriend'}
+        ]
+      },
+      livingRoom:{
+        text:'ในห้องนั่งเล่นมีเพียงแสงไฟสลัวจากทีวี...',
+        img:'assets/scene_1005.jpg',
+        bgm:'assets/bgm_livingroom.mp3',
+        rain:'assets/rain.mp3',
+        breath:'',
+        choices:[
+          {text:'เรียกชื่อเขาเบาๆ',next:'callName'},
+          {text:'เงียบและมองรอบๆ',next:'observe'}
+        ]
+      },
+      callFriend:{
+        text:'เพื่อนของเธอตอบสายด้วยเสียงอ่อนโยน “เหนื่อยไหมวันนี้?”',
+        img:'assets/scene_1006.jpg',
+        bgm:'',
+        rain:'',
+        breath:'',
+        choices:[
+          {text:'พูดระบายความเหนื่อย',next:'talkMore'},
+          {text:'บอกว่าขอตัวไปพัก',next:'end'}
+        ]
+      },
+      callName:{
+        text:'เสียงเงียบ... ไม่มีใครตอบ เธอเริ่มรู้สึกหนาวในอก',
+        img:'assets/scene_1006.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
+        breath:'assets/breath.mp3',
+        choices:[
+          {text:'เดินไปดูที่หน้าต่าง',next:'window'},
+          {text:'นั่งลงและหายใจลึกๆ',next:'end'}
+        ]
+      },
+      observe:{
+        text:'ทุกอย่างเงียบเกินไป... เหมือนเวลาหยุดนิ่ง',
+        img:'assets/scene_1016.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
+        breath:'',
+        choices:[{text:'ลองเปิดทีวีดู',next:'end'}]
+      },
+      talkMore:{
+        text:'เสียงหัวเราะของเพื่อนทำให้เธอรู้สึกอบอุ่นขึ้นเล็กน้อย',
+        img:'assets/scene_1017.jpg',
+        bgm:'',
+        rain:'',
+        breath:'',
+        choices:[{text:'พูดขอบคุณและวางสาย',next:'end'}]
+      },
+      window:{
+        text:'เธอมองออกไปเห็นสายฝนกับเงาใครบางคนในความมืด...',
+        img:'assets/scene_1013.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
+        breath:'assets/breath.mp3',
+        choices:[{text:'เปิดม่านดูให้ชัดขึ้น',next:'end'}]
+      },
+      end:{
+        text:'จบตอนทดลอง — ขอบคุณที่เล่น!',
+        img:'assets/scene_1010.jpg',
+        bgm:'',
+        rain:'',
+        breath:'',
+        choices:[{text:'เล่นอีกครั้ง',next:'start'}]
+      }
+    };
+
+    const sceneDiv = document.getElementById('scene');
+    const dialogueDiv = document.getElementById('dialogue');
+    const choicesDiv = document.getElementById('choices');
+
+    function playAudio(audio, src){
+      if(!src){audio.pause();audio.src='';return;}
+      if(audio.src!==src){audio.src=src;audio.play();}
+    }
+
+    function showScene(key){
+      const scene = scenes[key];
+      sceneDiv.style.backgroundImage = `url(${scene.img})`;
+      dialogueDiv.textContent = scene.text;
+     
