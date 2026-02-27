@@ -32,22 +32,22 @@
 
   <script>
     const soundToggle = document.getElementById('sound-toggle');
+    const bgm = document.getElementById('bgm');
+    const rain = document.getElementById('rain');
+    const breath = document.getElementById('breath');
     let soundOn = true;
-    soundToggle.addEventListener('click',()=>{
-      soundOn=!soundOn;
-      [bgm,rain,breath].forEach(a=>a.muted=!soundOn);
+
+    soundToggle.addEventListener('click', () => {
+      soundOn = !soundOn;
+      [bgm, rain, breath].forEach(a => a.muted = !soundOn);
       soundToggle.textContent = soundOn ? 'ปิดเสียง' : 'เปิดเสียง';
     });
 
-    const bgm=document.getElementById('bgm');
-    const rain=document.getElementById('rain');
-    const breath=document.getElementById('breath');
-
-    const scenes={
+    const scenes = {
       start:{
         text:'ค่ำคืนนี้ฝนโปรย เธอกลับบ้านหลังจากทำงานเหมือนทุกวัน...',
-        img:'https://picsum.photos/id/1018/800/600',
-        bgm:'https://cdn.pixabay.com/download/audio/2022/03/15/audio_fae0f9c937.mp3?filename=soft-piano-ambient-140795.mp3',
+        img:'assets/scene_1018.jpg',
+        bgm:'assets/bgm_start.mp3',
         rain:'',
         breath:'',
         choices:[
@@ -56,10 +56,10 @@
         ]
       },
       livingRoom:{
-        text:'ในห้องนั่งเล่นมีเพียงแสงไฟสลัวจากทีวี เธอรู้สึกถึงบรรยากาศแปลกๆ...',
-        img:'https://picsum.photos/id/1005/800/600',
-        bgm:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_123456.mp3',
-        rain:'https://cdn.pixabay.com/download/audio/2022/03/15/rain.mp3',
+        text:'ในห้องนั่งเล่นมีเพียงแสงไฟสลัวจากทีวี...',
+        img:'assets/scene_1005.jpg',
+        bgm:'assets/bgm_livingroom.mp3',
+        rain:'assets/rain.mp3',
         breath:'',
         choices:[
           {text:'เรียกชื่อเขาเบาๆ',next:'callName'},
@@ -68,8 +68,8 @@
       },
       callFriend:{
         text:'เพื่อนของเธอตอบสายด้วยเสียงอ่อนโยน “เหนื่อยไหมวันนี้?”',
-        img:'https://picsum.photos/id/1006/800/600',
-        bgm:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_654321.mp3',
+        img:'assets/scene_1006.jpg',
+        bgm:'',
         rain:'',
         breath:'',
         choices:[
@@ -79,10 +79,10 @@
       },
       callName:{
         text:'เสียงเงียบ... ไม่มีใครตอบ เธอเริ่มรู้สึกหนาวในอก',
-        img:'https://picsum.photos/id/1015/800/600',
-        bgm:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_987654.mp3',
-        rain:'https://cdn.pixabay.com/download/audio/2022/03/15/rain.mp3',
-        breath:'https://cdn.pixabay.com/download/audio/2022/03/15/breath.mp3',
+        img:'assets/scene_1006.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
+        breath:'assets/breath.mp3',
         choices:[
           {text:'เดินไปดูที่หน้าต่าง',next:'window'},
           {text:'นั่งลงและหายใจลึกๆ',next:'end'}
@@ -90,12 +90,49 @@
       },
       observe:{
         text:'ทุกอย่างเงียบเกินไป... เหมือนเวลาหยุดนิ่ง',
-        img:'https://picsum.photos/id/1011/800/600',
-        bgm:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_112233.mp3',
-        rain:'https://cdn.pixabay.com/download/audio/2022/03/15/rain.mp3',
+        img:'assets/scene_1016.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
         breath:'',
         choices:[{text:'ลองเปิดทีวีดู',next:'end'}]
       },
-      talkMore:{text:'เสียงหัวเราะของเพื่อนทำให้เธอรู้สึกอบอุ่นขึ้นเล็กน้อย',img:'https://picsum.photos/id/1012/800/600',bgm:'',rain:'',breath:'',choices:[{text:'พูดขอบคุณและวางสาย',next:'end'}]},
-      window:{text:'เธอมองออกไปเห็นสายฝนกับเงาใครบางคนในความมืด...',img:'https://picsum.photos/id/1013/800/600',bgm:'',rain:'https://cdn.pixabay.com/download/audio/2022/03/15/rain.mp3',breath:'https://cdn.pixabay.com/download/audio/2022/03/15/breath.mp3',choices:[{text:'เปิดม่านดูให้ชัดขึ้น',next:'end'}]},
-      end:{text:'จบตอนทดลอง — ขอบคุณที่เล่น!',img:'https://picsum.photos/id/1010/800/600',bgm:'',rain:'',breath:'',choices:[{te
+      talkMore:{
+        text:'เสียงหัวเราะของเพื่อนทำให้เธอรู้สึกอบอุ่นขึ้นเล็กน้อย',
+        img:'assets/scene_1017.jpg',
+        bgm:'',
+        rain:'',
+        breath:'',
+        choices:[{text:'พูดขอบคุณและวางสาย',next:'end'}]
+      },
+      window:{
+        text:'เธอมองออกไปเห็นสายฝนกับเงาใครบางคนในความมืด...',
+        img:'assets/scene_1013.jpg',
+        bgm:'',
+        rain:'assets/rain.mp3',
+        breath:'assets/breath.mp3',
+        choices:[{text:'เปิดม่านดูให้ชัดขึ้น',next:'end'}]
+      },
+      end:{
+        text:'จบตอนทดลอง — ขอบคุณที่เล่น!',
+        img:'assets/scene_1010.jpg',
+        bgm:'',
+        rain:'',
+        breath:'',
+        choices:[{text:'เล่นอีกครั้ง',next:'start'}]
+      }
+    };
+
+    const sceneDiv = document.getElementById('scene');
+    const dialogueDiv = document.getElementById('dialogue');
+    const choicesDiv = document.getElementById('choices');
+
+    function playAudio(audio, src){
+      if(!src){audio.pause();audio.src='';return;}
+      if(audio.src!==src){audio.src=src;audio.play();}
+    }
+
+    function showScene(key){
+      const scene = scenes[key];
+      sceneDiv.style.backgroundImage = `url(${scene.img})`;
+      dialogueDiv.textContent = scene.text;
+     

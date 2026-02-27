@@ -1,0 +1,10 @@
+Ntr-th-game/
+├── index.html       ← ไฟล์หลักของเกม
+└── assets/
+    ├── scene_1018.jpg
+    ├── scene_1005.jpg
+    ├── scene_1006.jpg
+    ├── rain.mp3
+    ├── breath.mp3
+    ├── bgm_start.mp3
+    └── bgm_livingroom.mp3
